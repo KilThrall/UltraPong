@@ -1,9 +1,6 @@
 ﻿  UltraPong.cpp
-C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(15,2): warning C4091: 'typedef ': ignored on left of 'Vector2' when no variable is declared
-C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(19,2): warning C4091: 'typedef ': ignored on left of 'Vector2Float' when no variable is declared
-C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(26,2): warning C4091: 'typedef ': ignored on left of 'KeyControls' when no variable is declared
-C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(113,34): warning C4018: '<': signed/unsigned mismatch
-C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(151,39): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
-C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(152,39): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
-C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(243,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(134,34): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(199,39): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(200,39): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(348,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   UltraPong.vcxproj -> C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\Debug\UltraPong.exe

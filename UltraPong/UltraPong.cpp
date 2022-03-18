@@ -9,23 +9,34 @@
 using namespace std;
 
 
-typedef struct Vector2 {
+struct Vector2 {
     int x;
     int y;
 };
-typedef struct Vector2Float {
+struct Vector2Float {
     float x;
     float y;
 };
 
-typedef struct KeyControls {
-    SDL_Scancode positive;
-    SDL_Scancode negative;
+struct PlayerData {
+    SDL_Scancode positiveKey;
+    SDL_Scancode negativeKey;
     Vector2 position;
     Vector2 size;
+    int points;
 };
 
-void Menu();
+enum class GameMode {
+    SINGLEPLAYER = 0,
+    SINGLEPLAYER_PREDICTIVE = 1,
+    MULTIPLAYER = 2
+};
+
+GameMode SelectMode();
+
+int AIMenu();
+
+int MultiplayerMenu();
 
 bool CanPlayFrame();
 
@@ -35,7 +46,7 @@ void ControlPlayer(int index);
 
 void DrawPlayer(int index);
 
-void ControlBall();
+void ControlBall(int totalPlayers);
 
 void ControlAI();
 
@@ -67,14 +78,14 @@ int AiSpeed = 0;
 
 int playerSpeed = 2;
 SDL_Texture* playerTexture;
-KeyControls playersControls[] = { {
-        SDL_SCANCODE_W, SDL_SCANCODE_S, {0,1}, {15, 100}
+PlayerData playersControls[] = { {
+        SDL_SCANCODE_W, SDL_SCANCODE_S, {0,1}, {15, 100}, 0
 },{
-        SDL_SCANCODE_K, SDL_SCANCODE_I, {mapSize.x,1}, {15, 100}
+        SDL_SCANCODE_K, SDL_SCANCODE_I, {mapSize.x,1}, {15, 100}, 0
 },{
-        SDL_SCANCODE_F, SDL_SCANCODE_G, {1,0}, {100, 15}
+        SDL_SCANCODE_F, SDL_SCANCODE_G, {1,0}, {100, 15}, 0
 },{
-        SDL_SCANCODE_N, SDL_SCANCODE_M, {1,mapSize.y}, {100, 15}
+        SDL_SCANCODE_N, SDL_SCANCODE_M, {1,mapSize.y}, {100, 15}, 0
 },
 };
 
@@ -91,7 +102,16 @@ int main(int argc, char* args[])
     int totalPlayers = 1;
     SDL_Init(SDL_INIT_EVERYTHING);
 
-    Menu();
+    GameMode gameMode = SelectMode();
+
+    if (gameMode == GameMode::MULTIPLAYER) {
+        totalPlayers = MultiplayerMenu();
+    }
+    else {
+        AiSpeed = AIMenu();
+    }
+
+    
 
     SDL_Window* window = SDL_CreateWindow("Ultra Pong", mapSize.x, mapSize.y, screenSize.x, screenSize.y, SDL_WINDOW_SHOWN);
     renderer = SDL_CreateRenderer(window, -1, 0);
@@ -116,7 +136,7 @@ int main(int argc, char* args[])
                 ControlPlayer(i);
             }
 
-            ControlBall();
+            ControlBall(totalPlayers);
 
             if (totalPlayers == 1) {
                 ControlAI();
@@ -128,14 +148,41 @@ int main(int argc, char* args[])
     return 0;
 }
 
-void Menu() {
-    AiSpeed = 0;
-    while (AiSpeed<=0||AiSpeed>20)
+GameMode SelectMode() {
+    int value = 0;
+    while (value <= 0 || value > 3)
     {
-        cout << "Select difficulty (1-20)"<<endl;
-        cin >> AiSpeed;
+        system("cls");
+        cout << "Select game mode: " << endl;
+        cout << "1: Singleplayer" << endl;
+        cout << "2: Singleplayer with predictive AI (possibly impossible with dif over 5) (WIP, does nothing, for now)" << endl;
+        cout << "3: Multiplayer" << endl;
+        cin >> value;
     }
-    
+    value--;
+    return static_cast<GameMode>(value);
+}
+
+int MultiplayerMenu() {
+    int value = 0;
+    while (value <= 1 || value > 4)
+    {
+        system("cls");
+        cout << "Select amount of players (2-4)" << endl;
+        cin >> value;
+    }
+    return value;
+}
+
+int AIMenu() {
+    int value = 0;
+    while (value <=0|| value >20)
+    {
+        system("cls");
+        cout << "Select difficulty (1-20)"<<endl;
+        cin >> value;
+    }
+    return value;
 }
 
 bool CanPlayFrame() {
@@ -147,7 +194,7 @@ bool CanPlayFrame() {
     return false;
 }
 
-void ControlBall() {
+void ControlBall(int totalPlayers) {
 
     ballPos.x += ballDir.x * ballSpeed;
     ballPos.y += ballDir.y * ballSpeed;
@@ -161,25 +208,59 @@ void ControlBall() {
             ballDir.x = -ballDir.x;
         }
         else {
-            GotPoint(-1);
+            
+            GotPoint(0);
         }
         
     }
-    else if (ballPos.x >= mapSize.x-mapSize.x/100) {
-        ballPos.x = mapSize.x - mapSize.x / 100;
-        ballDir.x = -ballDir.x;
+    else if (ballPos.x + ballSize.x > mapSize.x-mapSize.x/100) {
         totalBounces++;
+        if (ballPos.y + ballSize.y >= playersControls[1].position.y &&
+            ballPos.y <= playersControls[1].position.y + playersControls[1].size.y) 
+        {
+            ballPos.x = mapSize.x - mapSize.x / 95 - ballSize.x;
+            ballDir.x = -ballDir.x;
+        }
+        else {
+            if (totalPlayers == 1) {
+                GotPoint(-1);
+            }
+            else {
+                GotPoint(1);
+            }
+        }
     }
 
     if (ballPos.y < mapSize.y / 100) {
-        ballPos.y = mapSize.y / 100;
-        ballDir.y = -ballDir.y;
+
         totalBounces++;
+        if ((ballPos.x + ballSize.x >= playersControls[2].position.x &&
+            ballPos.x <= playersControls[2].position.x + playersControls[2].size.x) ||
+            totalPlayers<3)
+        {
+            ballPos.y = mapSize.y / 100;
+            ballDir.y = -ballDir.y;
+        }
+        else {
+            GotPoint(2);
+        }
+
+        
+        
     }
-    else if (ballPos.y >= mapSize.y - mapSize.y / 100) {
-        ballPos.y = mapSize.y - mapSize.y / 100;
-        ballDir.y = -ballDir.y;
+    else if (ballPos.y + ballSize.y > mapSize.y - mapSize.y / 100) {
+
         totalBounces++;
+        if ((ballPos.x + ballSize.x >= playersControls[3].position.x &&
+            ballPos.x <= playersControls[3].position.x + playersControls[3].size.x) ||
+            totalPlayers < 4) 
+        {
+            ballPos.y = mapSize.y - mapSize.y / 100 - ballSize.y;
+            ballDir.y = -ballDir.y;
+        }
+        else {
+            GotPoint(3);
+        }
     }
 
     if (totalBounces >= bouncesForSpeed) {
@@ -191,7 +272,7 @@ void ControlBall() {
 }
 
 void ControlPlayer(int index) {
-    if (keyboardState[playersControls[index].negative]) {
+    if (keyboardState[playersControls[index].negativeKey]) {
         if (index < 2) {
             playersControls[index].position.y+= playerSpeed;
         }
@@ -199,7 +280,7 @@ void ControlPlayer(int index) {
             playersControls[index].position.x += playerSpeed;
         }
     }
-    else if (keyboardState[playersControls[index].positive]) {
+    else if (keyboardState[playersControls[index].positiveKey]) {
         if (index < 2) {
             playersControls[index].position.y -= playerSpeed;
         }
@@ -232,12 +313,33 @@ void DrawPlayer(int index) {
 
 void GotPoint(int index) {
     if (index == -1) {
-        points[1]++;
+        playersControls[0].points++;
     }
     else {
-        points[index]++;
+        for (size_t i = 0; i < 4; i++)
+        {
+            if (i != index) {
+                playersControls[index].points++;
+            }
+        }
     }
     ResetBall();
+}
+
+int GetTotalPoints(int index) {
+    if (index == -1) {
+        return playersControls[0].points;
+    }
+    
+    int total = 0;
+    for (size_t i = 0; i < 4; i++)
+    {
+        if (i != index) {
+            total += playersControls[index].points;
+        }
+    }
+    return total;
+    
 }
 
 void ResetBall() {
