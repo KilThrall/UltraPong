@@ -29,7 +29,8 @@ struct PlayerData {
 enum class GameMode {
     SINGLEPLAYER = 0,
     SINGLEPLAYER_PREDICTIVE = 1,
-    MULTIPLAYER = 2
+    MULTIPLAYER = 2,
+    SINGLEPLAYER_3D = 3
 };
 
 GameMode SelectMode();
@@ -60,6 +61,7 @@ const Uint8* keyboardState;
 SDL_Renderer* renderer;
 Vector2 mapSize = { 750,300 };
 Vector2 screenSize = { 1280,720 };
+bool is3D = false;
 
 int points[] = { 0,0,0,0 };
 
@@ -109,6 +111,9 @@ int main(int argc, char* args[])
     }
     else {
         AiSpeed = AIMenu();
+        if (gameMode == GameMode::SINGLEPLAYER_3D) {
+            is3D = true;
+        }
     }
 
     
@@ -136,11 +141,13 @@ int main(int argc, char* args[])
                 ControlPlayer(i);
             }
 
-            ControlBall(totalPlayers);
-
             if (totalPlayers == 1) {
                 ControlAI();
             }
+
+            ControlBall(totalPlayers);
+
+            
             SDL_RenderPresent(renderer);
         }
     }
@@ -150,13 +157,14 @@ int main(int argc, char* args[])
 
 GameMode SelectMode() {
     int value = 0;
-    while (value <= 0 || value > 3)
+    while (value <= 0 || value > 4)
     {
         system("cls");
         cout << "Select game mode: " << endl;
         cout << "1: Singleplayer" << endl;
         cout << "2: Singleplayer with predictive AI (possibly impossible with dif over 5) (WIP, does nothing, for now)" << endl;
         cout << "3: Multiplayer" << endl;
+        cout << "4: 3D??" << endl;
         cin >> value;
     }
     value--;
@@ -307,8 +315,15 @@ void DrawPlayer(int index) {
         playersControls[index].position.y = mapSize.y - playersControls[index].size.y;
     }
 
-    Draw(playerTexture, playersControls[index].position.x, playersControls[index].position.y,
-        playersControls[index].size, renderer);
+    if (!is3D) {
+        Draw(playerTexture, playersControls[index].position.x, playersControls[index].position.y,
+            playersControls[index].size, renderer);
+    }
+    else if (index != 0) {
+        Draw(playerTexture, playersControls[index].position.x, playersControls[index].position.y,
+            playersControls[index].size, renderer);
+    }
+    
 }
 
 void GotPoint(int index) {
@@ -378,16 +393,32 @@ void ControlAI() {
 
 void Draw(SDL_Texture* texture, int x, int y, Vector2 imageSize, SDL_Renderer* renderer) {
     SDL_Rect rect;
-    rect.x = x;
-    rect.y = y;
+    if (!is3D) {
+        rect.x = x;
+        rect.y = y;
 
-    if (imageSize.x != 0) {
-        rect.w = imageSize.x;
-        rect.h = imageSize.y;
+        if (imageSize.x != 0) {
+            rect.w = imageSize.x;
+            rect.h = imageSize.y;
+        }
+        else {
+            SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
+        }
     }
     else {
-        SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
+        int fixedWidth = mapSize.x / 3;
+        Vector2 distance = { x - playersControls[0].position.x,  playersControls[0].position.y - y };
+        rect.w = fixedWidth*50 / distance.x;
+        rect.h = rect.w * (imageSize.y / imageSize.x);
+        rect.x = fixedWidth - (float)rect.w;
+     /*   int posY = 0;
+        if (distance.y > 0) {
+            rect.y = 
+        }*/
+        rect.y = y - distance.y;
+        
     }
+    
     SDL_RenderCopy(renderer, texture, NULL, &rect);
     
 }
