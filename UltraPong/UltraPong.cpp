@@ -5,6 +5,7 @@
 #include <SDL.h>
 #include <string>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 
 using namespace std;
 
@@ -24,6 +25,7 @@ struct PlayerData {
     Vector2 position;
     Vector2 size;
     int points;
+    SDL_Surface* pointsSurface;
 };
 
 enum class GameMode {
@@ -38,6 +40,8 @@ GameMode SelectMode();
 int AIMenu();
 
 int MultiplayerMenu();
+
+void SetTextSurface(int playerNumber);
 
 bool CanPlayFrame();
 
@@ -57,13 +61,18 @@ void GotPoint(int index);
 
 void ResetBall();
 
+void UpdateTexts(int totalPlayers);
+
+
 const Uint8* keyboardState;
 SDL_Renderer* renderer;
+TTF_Font* gameFont;
 Vector2 mapSize = { 750,300 };
 Vector2 screenSize = { 1280,720 };
 bool is3D = false;
+int textHeight = 60;
 
-int points[] = { 0,0,0,0 };
+char scoreChars[] = { '0','1', '2', '3', '4', '5' };
 
 int timeSinceLastFrame = 0;
 int timeForFrame = 600000;
@@ -83,7 +92,7 @@ SDL_Texture* playerTexture;
 PlayerData playersControls[] = { {
         SDL_SCANCODE_W, SDL_SCANCODE_S, {0,1}, {15, 100}, 0
 },{
-        SDL_SCANCODE_K, SDL_SCANCODE_I, {mapSize.x,1}, {15, 100}, 0
+        SDL_SCANCODE_I, SDL_SCANCODE_K, {mapSize.x,1}, {15, 100}, 0
 },{
         SDL_SCANCODE_F, SDL_SCANCODE_G, {1,0}, {100, 15}, 0
 },{
@@ -103,6 +112,8 @@ int main(int argc, char* args[])
     bool playing = true;
     int totalPlayers = 1;
     SDL_Init(SDL_INIT_EVERYTHING);
+    TTF_Init();
+    gameFont = TTF_OpenFont("fonts/pixelated.ttf", 24);
 
     GameMode gameMode = SelectMode();
 
@@ -118,7 +129,7 @@ int main(int argc, char* args[])
 
     
 
-    SDL_Window* window = SDL_CreateWindow("Ultra Pong", mapSize.x, mapSize.y, screenSize.x, screenSize.y, SDL_WINDOW_SHOWN);
+    SDL_Window* window = SDL_CreateWindow("Ultra Pong", mapSize.x, mapSize.y+ textHeight, screenSize.x, screenSize.y, SDL_WINDOW_SHOWN);
     renderer = SDL_CreateRenderer(window, -1, 0);
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -147,6 +158,7 @@ int main(int argc, char* args[])
 
             ControlBall(totalPlayers);
 
+            UpdateTexts(totalPlayers);
             
             SDL_RenderPresent(renderer);
         }
@@ -179,7 +191,33 @@ int MultiplayerMenu() {
         cout << "Select amount of players (2-4)" << endl;
         cin >> value;
     }
+    
+    for (int i = 0; i < value; i++)
+    {
+        SetTextSurface(i);
+    }
     return value;
+}
+
+void SetTextSurface(int playerNumber) {
+    SDL_Color color = { 255,255,255 };
+    switch (playerNumber) {
+    case -1:
+        playersControls[1].pointsSurface = TTF_RenderText_Blended(gameFont, "AI:", color);
+        break;
+    case 0:
+        playersControls[playerNumber].pointsSurface = TTF_RenderText_Blended(gameFont, "Player 1(w,s):", color);
+        break;
+    case 1:
+        playersControls[playerNumber].pointsSurface = TTF_RenderText_Blended(gameFont, "Player 2(i,k):", color);
+        break;
+    case 2:
+        playersControls[playerNumber].pointsSurface = TTF_RenderText_Blended(gameFont, "Player 3(f,g):", color);
+        break;
+    case 3:
+        playersControls[playerNumber].pointsSurface = TTF_RenderText_Blended(gameFont, "Player 4(n,m):", color);
+        break;
+    }
 }
 
 int AIMenu() {
@@ -190,6 +228,8 @@ int AIMenu() {
         cout << "Select difficulty (1-20)"<<endl;
         cin >> value;
     }
+    SetTextSurface(0);
+    SetTextSurface(-1); //AI
     return value;
 }
 
@@ -338,6 +378,7 @@ void GotPoint(int index) {
             }
         }
     }
+    
     ResetBall();
 }
 
@@ -427,6 +468,26 @@ SDL_Texture* LoadTexture(string filename, SDL_Renderer* renderer) {
     SDL_Texture* texture = IMG_LoadTexture(renderer, filename.c_str());
 
     return texture;
+}
+
+void UpdateTexts(int totalPlayers) {
+    SDL_Texture* textTexture;
+    SDL_Rect rect;
+    rect.w = 100;
+    rect.h = textHeight/2;
+    if (totalPlayers == 1) {
+        totalPlayers = 2; //made to render AI texts
+    }
+    
+    for (size_t i = 0; i < totalPlayers; i++)
+    {
+        textTexture = SDL_CreateTextureFromSurface(renderer, playersControls[i].pointsSurface);
+        rect.x = rect.w * i;
+        rect.y = mapSize.y;
+        SDL_RenderCopy(renderer, textTexture, NULL, &rect);
+
+    }
+
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
