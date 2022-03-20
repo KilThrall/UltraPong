@@ -25,7 +25,7 @@ struct PlayerData {
     Vector2 position;
     Vector2 size;
     int points;
-    SDL_Surface* pointsSurface;
+    SDL_Surface* controlsSurface;
 };
 
 enum class GameMode {
@@ -34,6 +34,8 @@ enum class GameMode {
     MULTIPLAYER = 2,
     SINGLEPLAYER_3D = 3
 };
+
+void SetPointsSurfaces();
 
 GameMode SelectMode();
 
@@ -57,11 +59,13 @@ void ControlAI();
 
 SDL_Texture* LoadTexture(string filename, SDL_Renderer* renderer);
 
-void GotPoint(int index);
+void GotScored(int index);
 
 void ResetBall();
 
 void UpdateTexts(int totalPlayers);
+
+bool HasSomeoneWon(int totalPlayers);
 
 
 const Uint8* keyboardState;
@@ -73,6 +77,7 @@ bool is3D = false;
 int textHeight = 60;
 
 char scoreChars[] = { '0','1', '2', '3', '4', '5' };
+SDL_Surface* pointsSurface[6];
 
 int timeSinceLastFrame = 0;
 int timeForFrame = 600000;
@@ -114,6 +119,7 @@ int main(int argc, char* args[])
     SDL_Init(SDL_INIT_EVERYTHING);
     TTF_Init();
     gameFont = TTF_OpenFont("fonts/pixelated.ttf", 24);
+    SetPointsSurfaces();
 
     GameMode gameMode = SelectMode();
 
@@ -140,6 +146,7 @@ int main(int argc, char* args[])
     while (playing) {
 
         if (CanPlayFrame()) {
+            playing = !HasSomeoneWon(totalPlayers);
             Update();
             SDL_RenderClear(renderer);
 
@@ -162,9 +169,63 @@ int main(int argc, char* args[])
             
             SDL_RenderPresent(renderer);
         }
+        
+    }
+    system("cls");
+
+    if (!HasSomeoneWon(totalPlayers)) {
+        cout << "How can you all be such pussies to end the game early?" << endl;
+    }
+    else {
+        int totalWinners = 0;
+        int checkingPlayers = totalPlayers;
+        if (checkingPlayers == 1) {
+            checkingPlayers = 2; //Made to check on single player
+        }
+        for (size_t i = 0; i < checkingPlayers; i++)
+        {
+            if (playersControls[i].points >= 5) {
+                totalWinners++;
+            }
+        }
+        switch (totalWinners) {
+        case 1:
+            for (size_t i = 0; i < checkingPlayers; i++)
+            {
+                if (playersControls[i].points >= 5) {
+                    if (i == 1 && totalPlayers == 1) {
+                        cout << "Did you really just lose to an AI?" << endl;
+                    }
+                    else {
+                        cout << "Congratulations to player " << i << " for breaking everyone else's asses'" << endl;
+                    }
+                   
+                }
+            }
+            break;
+        case 2:
+            cout << "Two winners? really? I am too lazy to even figure out who won. GG" << endl;
+            break;
+        case 3:
+            cout << "Who the f* got his ass beaten so badly to have everyone else win but him?" << endl;
+            break;
+        case 4:
+            cout << "How? Just how did all of you win? Was there a point to this all?" << endl;
+            break;
+        }
     }
 
     return 0;
+}
+
+void SetPointsSurfaces() {
+    SDL_Color color = { 0,255,0 };
+    pointsSurface[0] = TTF_RenderText_Blended(gameFont, "0", color);
+    pointsSurface[1] = TTF_RenderText_Blended(gameFont, "1", color);
+    pointsSurface[2] = TTF_RenderText_Blended(gameFont, "2", color);
+    pointsSurface[3] = TTF_RenderText_Blended(gameFont, "3", color);
+    pointsSurface[4] = TTF_RenderText_Blended(gameFont, "4", color);
+    pointsSurface[5] = TTF_RenderText_Blended(gameFont, "5", color);
 }
 
 GameMode SelectMode() {
@@ -203,19 +264,19 @@ void SetTextSurface(int playerNumber) {
     SDL_Color color = { 255,255,255 };
     switch (playerNumber) {
     case -1:
-        playersControls[1].pointsSurface = TTF_RenderText_Blended(gameFont, "AI:", color);
+        playersControls[1].controlsSurface = TTF_RenderText_Blended(gameFont, "AI:", color);
         break;
     case 0:
-        playersControls[playerNumber].pointsSurface = TTF_RenderText_Blended(gameFont, "Player 1(w,s):", color);
+        playersControls[playerNumber].controlsSurface = TTF_RenderText_Blended(gameFont, "Player 1(w,s):", color);
         break;
     case 1:
-        playersControls[playerNumber].pointsSurface = TTF_RenderText_Blended(gameFont, "Player 2(i,k):", color);
+        playersControls[playerNumber].controlsSurface = TTF_RenderText_Blended(gameFont, "Player 2(i,k):", color);
         break;
     case 2:
-        playersControls[playerNumber].pointsSurface = TTF_RenderText_Blended(gameFont, "Player 3(f,g):", color);
+        playersControls[playerNumber].controlsSurface = TTF_RenderText_Blended(gameFont, "Player 3(f,g):", color);
         break;
     case 3:
-        playersControls[playerNumber].pointsSurface = TTF_RenderText_Blended(gameFont, "Player 4(n,m):", color);
+        playersControls[playerNumber].controlsSurface = TTF_RenderText_Blended(gameFont, "Player 4(n,m):", color);
         break;
     }
 }
@@ -257,7 +318,7 @@ void ControlBall(int totalPlayers) {
         }
         else {
             
-            GotPoint(0);
+            GotScored(0);
         }
         
     }
@@ -271,10 +332,10 @@ void ControlBall(int totalPlayers) {
         }
         else {
             if (totalPlayers == 1) {
-                GotPoint(-1);
+                GotScored(-1);
             }
             else {
-                GotPoint(1);
+                GotScored(1);
             }
         }
     }
@@ -290,7 +351,7 @@ void ControlBall(int totalPlayers) {
             ballDir.y = -ballDir.y;
         }
         else {
-            GotPoint(2);
+            GotScored(2);
         }
 
         
@@ -307,7 +368,7 @@ void ControlBall(int totalPlayers) {
             ballDir.y = -ballDir.y;
         }
         else {
-            GotPoint(3);
+            GotScored(3);
         }
     }
 
@@ -366,7 +427,8 @@ void DrawPlayer(int index) {
     
 }
 
-void GotPoint(int index) {
+void GotScored(int index) {
+    
     if (index == -1) {
         playersControls[0].points++;
     }
@@ -374,7 +436,7 @@ void GotPoint(int index) {
         for (size_t i = 0; i < 4; i++)
         {
             if (i != index) {
-                playersControls[index].points++;
+                playersControls[i].points++;
             }
         }
     }
@@ -472,22 +534,43 @@ SDL_Texture* LoadTexture(string filename, SDL_Renderer* renderer) {
 
 void UpdateTexts(int totalPlayers) {
     SDL_Texture* textTexture;
+    SDL_Texture* pointsTexture;
     SDL_Rect rect;
     rect.w = 100;
     rect.h = textHeight/2;
     if (totalPlayers == 1) {
         totalPlayers = 2; //made to render AI texts
     }
+    SDL_Rect pointsRect;
+    pointsRect.h = rect.h;
+    pointsRect.w = rect.w / 5;
     
     for (size_t i = 0; i < totalPlayers; i++)
     {
-        textTexture = SDL_CreateTextureFromSurface(renderer, playersControls[i].pointsSurface);
+        textTexture = SDL_CreateTextureFromSurface(renderer, playersControls[i].controlsSurface);
         rect.x = rect.w * i;
         rect.y = mapSize.y;
+        
+        pointsTexture = SDL_CreateTextureFromSurface(renderer, pointsSurface[playersControls[i].points]);
+        pointsRect.x = rect.x;
+        pointsRect.y = mapSize.y + textHeight / 2;
+
         SDL_RenderCopy(renderer, textTexture, NULL, &rect);
-
+        SDL_RenderCopy(renderer, pointsTexture, NULL, &pointsRect);
     }
+}
 
+bool HasSomeoneWon(int totalPlayers) {
+    if (totalPlayers == 1) {
+        totalPlayers = 2; //Made to check on single player
+    }
+    for (size_t i = 0; i < totalPlayers; i++)
+    {
+        if (playersControls[i].points >= 5) {
+            return true;
+        }
+    }
+    return false;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
