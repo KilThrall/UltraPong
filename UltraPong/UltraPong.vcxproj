@@ -72,8 +72,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\nicof\Documents\Facu\Programacion1\SDL2-2.0.20\include;C:\Users\nicof\Documents\Facu\Programacion1\SDL2_image-2.0.5\include;C:\Users\nicof\Documents\Facu\Programacion1\SDL2_ttf-2.0.18\include;</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);C:\Users\nicof\Documents\Facu\Programacion1\SDL2-2.0.20\lib\x86;C:\Users\nicof\Documents\Facu\Programacion1\SDL2_image-2.0.5\lib\x86;C:\Users\nicof\Documents\Facu\Programacion1\SDL2_ttf-2.0.18\lib\x86;</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\alu701.LABORATORIOS\Downloads\SDL2-2.0.22\include;C:\Users\alu701.LABORATORIOS\Downloads\SDL2_image-2.0.5\include;C:\Users\alu701.LABORATORIOS\Downloads\SDL2_ttf-2.0.18\include</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);C:\Users\alu701.LABORATORIOS\Downloads\SDL2-2.0.22\lib\x86;C:\Users\alu701.LABORATORIOS\Downloads\SDL2_image-2.0.5\lib\x86;C:\Users\alu701.LABORATORIOS\Downloads\SDL2_ttf-2.0.18\lib\x86</LibraryPath>
     <ReferencePath>$(VC_ReferencesPath_x86);</ReferencePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -95,7 +95,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\nicof\Documents\Facu\Programacion1\SDL2-2.0.20\lib\x86; C:\Users\nicof\Documents\Facu\Programacion1\SDL2_image-2.0.5\lib\x86;C:\Users\nicof\Documents\Facu\Programacion1\SDL2_ttf-2.0.18\lib\x86;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\alu701.LABORATORIOS\Downloads\SDL2-2.0.22\lib\x86;C:\Users\alu701.LABORATORIOS\Downloads\SDL2_image-2.0.5\lib\x86;C:\Users\alu701.LABORATORIOS\Downloads\SDL2_ttf-2.0.18\lib\x86</AdditionalLibraryDirectories>
       <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

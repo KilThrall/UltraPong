@@ -1,12 +1,10 @@
 ﻿  UltraPong.cpp
-C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(160,34): warning C4018: '<': signed/unsigned mismatch
-C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(188,30): warning C4018: '<': signed/unsigned mismatch
-C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(196,34): warning C4018: '<': signed/unsigned mismatch
-C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(311,39): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
-C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(312,39): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
-C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(467,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(519,29): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(551,26): warning C4018: '<': signed/unsigned mismatch
-C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(570,26): warning C4018: '<': signed/unsigned mismatch
-  LINK : C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\Debug\UltraPong.exe not found or not built by the last incremental link; performing full link
-  UltraPong.vcxproj -> C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\Debug\UltraPong.exe
+C:\Users\alu701.LABORATORIOS\Downloads\UltraPong-master\UltraPong\UltraPong.cpp(176,34): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\alu701.LABORATORIOS\Downloads\UltraPong-master\UltraPong\UltraPong.cpp(208,30): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\alu701.LABORATORIOS\Downloads\UltraPong-master\UltraPong\UltraPong.cpp(216,34): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\alu701.LABORATORIOS\Downloads\UltraPong-master\UltraPong\UltraPong.cpp(331,39): warning C4244: '+=': conversión de 'float' a 'int'; posible pérdida de datos
+C:\Users\alu701.LABORATORIOS\Downloads\UltraPong-master\UltraPong\UltraPong.cpp(332,39): warning C4244: '+=': conversión de 'float' a 'int'; posible pérdida de datos
+C:\Users\alu701.LABORATORIOS\Downloads\UltraPong-master\UltraPong\UltraPong.cpp(539,29): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
+C:\Users\alu701.LABORATORIOS\Downloads\UltraPong-master\UltraPong\UltraPong.cpp(571,26): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\alu701.LABORATORIOS\Downloads\UltraPong-master\UltraPong\UltraPong.cpp(590,26): warning C4018: '<': no coinciden signed/unsigned
+  UltraPong.vcxproj -> C:\Users\alu701.LABORATORIOS\Downloads\UltraPong-master\Debug\UltraPong.exe

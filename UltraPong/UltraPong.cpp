@@ -12,6 +12,7 @@
 
 using namespace std;
 
+//Data type declarations
 
 struct Vector2 {
     int x;
@@ -37,6 +38,8 @@ enum class GameMode {
     MULTIPLAYER = 2,
     SINGLEPLAYER_3D = 3
 };
+
+//Method declaration
 
 void SetPointsSurfaces();
 
@@ -70,6 +73,7 @@ void UpdateTexts(int totalPlayers);
 
 bool HasSomeoneWon(int totalPlayers);
 
+//Global variable declarations
 
 const Uint8* keyboardState;
 SDL_Renderer* renderer;
@@ -117,6 +121,7 @@ void Update()
 
 int main(int argc, char* args[])
 {
+	//initialization
     bool playing = true;
     int totalPlayers = 1;
     SDL_Init(SDL_INIT_EVERYTHING);
@@ -124,52 +129,67 @@ int main(int argc, char* args[])
     gameFont = TTF_OpenFont("fonts/pixelated.ttf", 24);
     SetPointsSurfaces();
 
+	//First menu, selection of 1 of the 4 (one in WIP modes)
     GameMode gameMode = SelectMode();
 
     if (gameMode == GameMode::MULTIPLAYER) {
+		//Selection of amount of players
         totalPlayers = MultiplayerMenu();
     }
     else {
+		//Selection of difficulty based on AI max speed
         AiSpeed = AIMenu();
         if (gameMode == GameMode::SINGLEPLAYER_3D) {
+			//Redefinition used on Draw method to give first person VFX
             is3D = true;
         }
     }
 
     
-
+	//Creation of game window
     SDL_Window* window = SDL_CreateWindow("Ultra Pong", mapSize.x, mapSize.y+ textHeight, screenSize.x, screenSize.y, SDL_WINDOW_SHOWN);
     renderer = SDL_CreateRenderer(window, -1, 0);
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
+	//Texture loading
     ballTexture = LoadTexture("graphics/ball.png", renderer);
     playerTexture = LoadTexture("graphics/line.png", renderer);
     
+	//Main gameplay loop
     while (playing) {
-
+		//Arbitrary function made by me because I didnt know how to set a specified amount of FPS
         if (CanPlayFrame()) {
+			//Check wheter or not we should finish the game
             playing = !HasSomeoneWon(totalPlayers);
+			//Update keyboard inputs
             Update();
+			//Clean last frame
             SDL_RenderClear(renderer);
 
+			//Detection of forced stop execution
             if (keyboardState[SDL_SCANCODE_P]) {
                 playing = false;
             }
 
+			//Control the total players
             for (size_t i = 0; i < totalPlayers; i++)
             {
                 ControlPlayer(i);
             }
 
+			//If its just one it means we are playing against the AI
             if (totalPlayers == 1) {
                 ControlAI();
             }
 
+			//Moves the ball and controls its collisions, uses total players to check wheter or not there should be collisions on top and bottoms
             ControlBall(totalPlayers);
 
+			//Updates the text with the scores
             UpdateTexts(totalPlayers);
             
+			//Render all the previous loaded things
             SDL_RenderPresent(renderer);
         }
         
@@ -177,7 +197,7 @@ int main(int argc, char* args[])
     system("cls");
 
     if (!HasSomeoneWon(totalPlayers)) {
-        cout << "How can you all be such pussies to end the game early?" << endl;
+        cout << "Why would you end the game early?" << endl;
     }
     else {
         int totalWinners = 0;
@@ -200,7 +220,7 @@ int main(int argc, char* args[])
                         cout << "Did you really just lose to an AI?" << endl;
                     }
                     else {
-                        cout << "Congratulations to player " << i << " for breaking everyone else's asses'" << endl;
+                        cout << "Congratulations to player " << i << " for winning" << endl;
                     }
                    
                 }
@@ -210,7 +230,7 @@ int main(int argc, char* args[])
             cout << "Two winners? really? I am too lazy to even figure out who won. GG" << endl;
             break;
         case 3:
-            cout << "Who the f* got his ass beaten so badly to have everyone else win but him?" << endl;
+            cout << "How can 3 people win?" << endl;
             break;
         case 4:
             cout << "How? Just how did all of you win? Was there a point to this all?" << endl;
@@ -464,7 +484,7 @@ int GetTotalPoints(int index) {
 }
 
 void ResetBall() {
-    srand(time(NULL));
+    //srand(time(NULL));
     ballSpeed = 2;
 
     ballPos.x = rand() % (mapSize.x-mapSize.x/5) + mapSize.x/10;
