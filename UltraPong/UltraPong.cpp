@@ -7,6 +7,9 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 
+#define SCREEN_WIDTH 1280
+#define SCREEN_HEIGHT 720
+
 using namespace std;
 
 
@@ -72,7 +75,7 @@ const Uint8* keyboardState;
 SDL_Renderer* renderer;
 TTF_Font* gameFont;
 Vector2 mapSize = { 750,300 };
-Vector2 screenSize = { 1280,720 };
+Vector2 screenSize = { SCREEN_WIDTH, SCREEN_HEIGHT };
 bool is3D = false;
 int textHeight = 60;
 

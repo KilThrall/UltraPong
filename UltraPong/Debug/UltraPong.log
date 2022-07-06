@@ -1,11 +1,12 @@
 ﻿  UltraPong.cpp
-C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(157,34): warning C4018: '<': signed/unsigned mismatch
-C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(185,30): warning C4018: '<': signed/unsigned mismatch
-C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(193,34): warning C4018: '<': signed/unsigned mismatch
-C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(308,39): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
-C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(309,39): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
-C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(464,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(516,29): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(548,26): warning C4018: '<': signed/unsigned mismatch
-C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(567,26): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(160,34): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(188,30): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(196,34): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(311,39): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(312,39): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(467,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(519,29): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(551,26): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\UltraPong\UltraPong.cpp(570,26): warning C4018: '<': signed/unsigned mismatch
+  LINK : C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\Debug\UltraPong.exe not found or not built by the last incremental link; performing full link
   UltraPong.vcxproj -> C:\Users\nicof\Documents\Facu\Programacion1\UltraPong\Debug\UltraPong.exe
